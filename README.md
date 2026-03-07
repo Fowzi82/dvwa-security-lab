@@ -77,10 +77,11 @@ Payload Used:
 
 username: admin  
 password list:
-password
 123456
 admin
 letmein
+karachi123
+password
 
 Steps Performed:
 
