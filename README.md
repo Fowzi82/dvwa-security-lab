@@ -1,10 +1,10 @@
 # DVWA Security Lab Report
 
 ## Student Information
-Name: Fowzi Ali
-Course: Cybersecurity: Theory, Tools
-Assignment: Application Security Testing
-Date: March 8th, 2026
+- Name: Fowzi Ali
+- Course: Cybersecurity: Theory, Tools
+- Assignment: Application Security Testing
+- Date: March 8th, 2026
 
 ---
 
