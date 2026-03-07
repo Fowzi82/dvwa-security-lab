@@ -1762,8 +1762,8 @@ The browser executes the injected JavaScript and displays the alert pop-up.
 
 Screenshot:
 
-![CSP Bypass High](screenshots/csp-bypass-high.png)
 ![CSP Bypass High](screenshots/csp-bypass-high1.png)
+![CSP Bypass High](screenshots/csp-bypass-high2.png)
 
 Explanation (Why it Worked):
 
