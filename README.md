@@ -1838,7 +1838,7 @@ Submitting these values successfully completes the challenge.
 **Screenshot to attach:**
 
 ![JavaScript Low Success](screenshots/js_low_success.png)
-![JavaScript Low Success](screenshots/js_low_success.png1)
+![JavaScript Low Success](screenshots/js_low_success1.png)
 
 ---
 
