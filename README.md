@@ -1497,3 +1497,141 @@ At High security level, DVWA blocks variations of the `<script>` tag using stron
 Category:
 
 Injection (OWASP Top 10 A03:2021)
+
+## Cross-Site Scripting (Stored)
+
+Description:
+
+Stored Cross-Site Scripting (Stored XSS) occurs when a web application stores malicious user input in a database and later displays it to other users without proper sanitization. When the stored data is viewed, the malicious script executes automatically in the victim's browser.
+
+---
+
+### Security Level: Low
+
+Payload Used:
+
+```
+<script>alert(document.domain)</script>
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → XSS (Stored)**.
+2. Set DVWA Security Level to **Low**.
+3. Enter any name in the **Name** field.
+4. Enter the payload above in the **Message** field.
+5. Click **Sign Guestbook**.
+
+Result:
+
+The payload is stored in the database and executes automatically whenever the page loads.
+
+Screenshot:
+
+![Stored XSS Low](screenshots/xss-stored-low.png)
+
+Explanation (Why it Worked):
+
+At Low security level, the application does not sanitize or validate user input before storing it in the database. When the stored message is displayed on the webpage, the injected JavaScript executes in the browser.
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+```
+<img src=x onerror=alert(document.cookie)>
+```
+
+Additional Bypass Technique:
+
+Using **Inspect Element**, modify the input field attributes:
+
+```
+size="100"
+maxlength="100"
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → XSS (Stored)**.
+2. Set DVWA Security Level to **Medium**.
+3. Right-click the **Message** field and select **Inspect**.
+4. Modify the input attributes:
+   - Change `maxlength` to a larger value.
+   - Change `size` to allow longer input.
+5. Enter the payload above in the message field.
+6. Submit the form.
+
+Result:
+
+The payload is stored successfully and executes when the guestbook page loads, displaying the user's cookies.
+
+Screenshot:
+
+![Stored XSS Medium](screenshots/xss-stored-medium.png)
+![Stored XSS Medium](screenshots/xss-stored-medium1.png)
+
+Explanation (Why it Worked):
+
+At Medium security level, DVWA attempts to limit input length using HTML attributes like `maxlength`. However, these restrictions are enforced only on the client side. By modifying the HTML attributes using **Inspect Element**, attackers can bypass the restriction and inject malicious JavaScript code.
+
+---
+
+### Security Level: High
+
+Payload Used:
+
+```
+<body onload=alert('FowziIsTheBest')>
+```
+
+Additional Bypass Technique:
+
+Using **Inspect Element**, modify the input attributes:
+
+```
+size="100"
+maxlength="100"
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → XSS (Stored)**.
+2. Set DVWA Security Level to **High**.
+3. Right-click the **Message** field and open **Inspect Element**.
+4. Modify the attributes `size` and `maxlength` to allow longer input.
+5. Insert the payload above into the message field.
+6. Submit the form.
+
+Result:
+
+The malicious payload is stored in the database and triggers an alert whenever the page loads.
+
+Screenshot:
+
+![Stored XSS High](screenshots/xss-stored-high.png)
+![Stored XSS High](screenshots/xss-stored-high1.png)
+
+Explanation (Why it Worked):
+
+At High security level, DVWA implements stronger input filtering but still fails to completely sanitize HTML elements. By bypassing client-side restrictions using **Inspect Element**, attackers can inject alternative HTML elements such as `<body>` with JavaScript event handlers like `onload`, allowing script execution when the page loads.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | No input sanitization |
+| Medium | Successful | Client-side input restriction bypass |
+| High | Successful | Incomplete HTML filtering |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Injection (OWASP Top 10 A03:2021)
