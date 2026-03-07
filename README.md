@@ -444,3 +444,114 @@ Since the server only checks whether the token exists and is valid, replaying th
 Category:
 
 Broken Access Control (OWASP A01)
+
+## File Inclusion
+
+Description:
+
+File Inclusion vulnerabilities occur when a web application dynamically loads files based on user input without proper validation. Attackers can manipulate the file path to include unintended files from the server, potentially exposing sensitive information.
+
+---
+
+### Security Level: Low
+
+Payload Used:
+
+```
+http://127.0.0.1:8080/vulnerabilities/fi/?page=file4.php
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → File Inclusion**.
+2. Set DVWA Security Level to **Low**.
+3. Modify the `page` parameter in the URL.
+4. Change the file value to `file4.php`.
+
+Result:
+
+The application successfully loaded **file4.php**, which is not directly accessible through the normal interface.
+
+Screenshot:
+
+![File Inclusion Low](screenshots/file-inclusion-low.png)
+
+Explanation (Why it Worked):
+
+At Low security level, DVWA directly loads the file specified in the `page` parameter without validating or restricting the file name. Because of this, attackers can manually modify the URL to include any file that exists within the application's directory.
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+```
+http://127.0.0.1:8080/vulnerabilities/fi/?page=//etc/passwd
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → File Inclusion**.
+2. Set DVWA Security Level to **Medium**.
+3. Modify the `page` parameter in the URL.
+4. Use the payload `//etc/passwd` to attempt loading a system file.
+
+Result:
+
+The contents of the `/etc/passwd` file were displayed in the browser.
+
+Screenshot:
+
+![File Inclusion Medium](screenshots/file-inclusion-medium.png)
+
+Explanation (Why it Worked):
+
+At Medium security level, DVWA attempts to prevent directory traversal attacks by filtering patterns like `../`. However, the filter is weak and does not properly block alternative path formats. By using `//etc/passwd`, the attacker bypasses the filter and forces the application to include the sensitive system file.
+
+---
+
+### Security Level: High
+
+Payload Used:
+
+```
+http://127.0.0.1:8080/vulnerabilities/fi/?page=file:////etc/passwd
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → File Inclusion**.
+2. Set DVWA Security Level to **High**.
+3. Modify the `page` parameter in the URL.
+4. Use the `file://` protocol to attempt file inclusion.
+
+Result:
+
+The application successfully displayed the contents of the `/etc/passwd` file.
+
+Screenshot:
+
+![File Inclusion High](screenshots/file-inclusion-high.png)
+
+Explanation (Why it Worked):
+
+At High security level, DVWA attempts to restrict file inclusion by validating the file path and blocking common directory traversal techniques. However, the application does not properly validate URI schemes. By using the `file://` protocol, the attacker bypasses the input validation and forces the application to load a sensitive system file from the server.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | No file validation |
+| Medium | Successful | Directory traversal filter bypass |
+| High | Successful | `file://` protocol bypass |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Security Misconfiguration (OWASP Top 10 A05:2021)
