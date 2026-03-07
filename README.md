@@ -61,6 +61,6 @@ Screenshot:
 
 # Vulnerability Testing
 
-## SQL Injection
+## Brute Force
 
 ### Security Level: Low
