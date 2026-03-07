@@ -1635,3 +1635,154 @@ At High security level, DVWA implements stronger input filtering but still fails
 Category:
 
 Injection (OWASP Top 10 A03:2021)
+
+## Content Security Policy (CSP) Bypass
+
+Description:
+
+Content Security Policy (CSP) is a browser security mechanism designed to prevent attacks such as Cross-Site Scripting (XSS) by restricting which resources (scripts, images, styles, etc.) can be loaded and executed by a webpage. However, if CSP rules are misconfigured or overly permissive, attackers may still bypass these restrictions and execute malicious scripts.
+
+---
+
+### Security Level: Low
+
+Observation:
+
+Using **Burp Suite**, we inspected the HTTP response headers and identified the CSP rules that allow scripts to be loaded from the following external domains:
+
+```
+https://pastebin.com
+example.com
+code.jquery.com
+https://ssl.google-analytics.com
+```
+
+Payload Used:
+
+Create a script on Pastebin or a similar paste service containing:
+
+```
+alert('CSP bypass')
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → CSP Bypass**.
+2. Set DVWA Security Level to **Low**.
+3. Intercept the request using **Burp Suite** and examine the **Content-Security-Policy** header.
+4. Notice that external scripts are allowed from certain domains.
+5. Create a paste containing the malicious script.
+6. Copy the **raw script URL**.
+7. Paste the raw script URL into the input field on the page.
+8. Click **Include**.
+
+Result:
+
+The page loads the external script from the allowed domain and executes it, displaying a pop‑up message.
+
+Screenshot:
+
+![CSP Bypass Low](screenshots/csp-bypass-low.png)
+
+Explanation (Why it Worked):
+
+At Low security level, the CSP configuration allows scripts to be loaded from several external domains. Because sites like Pastebin allow user-generated content, attackers can host malicious scripts there and load them into the vulnerable application.
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+```
+<script nonce="TmV2ZXIgZ29pbmcgdG8gZ2l2ZSB5b3UgdXA=">
+alert("YouJustGotHackedMate");
+</script>
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → CSP Bypass**.
+2. Set DVWA Security Level to **Medium**.
+3. Inspect the page source and observe the **nonce value** used in the CSP rule.
+4. Use the same nonce value in a malicious `<script>` tag.
+5. Insert the payload above into the input field.
+
+Result:
+
+The injected script executes successfully and displays the alert message.
+
+Screenshot:
+
+![CSP Bypass Medium](screenshots/csp-bypass-medium.png)
+
+Explanation (Why it Worked):
+
+At Medium security level, DVWA attempts to restrict script execution using a **nonce-based CSP**. However, the nonce value is predictable or reused within the page. By copying the same nonce value in a malicious script tag, the attacker can bypass the CSP restriction and execute arbitrary JavaScript.
+
+---
+
+### Security Level: High
+
+Attack Method:
+
+Request manipulation using **Burp Suite**.
+
+Modified Payload:
+
+```
+alert("FowziIsQuiteLiterallyTheBest")//
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → CSP Bypass**.
+2. Set DVWA Security Level to **High**.
+3. Intercept the request using **Burp Suite**.
+4. Locate the callback parameter in the request.
+5. Replace the callback function:
+
+Original:
+
+```
+solveSum
+```
+
+Modified:
+
+```
+alert("FowziIsQuiteLiterallyTheBest")//
+```
+
+6. Forward the modified request to the server.
+
+Result:
+
+The browser executes the injected JavaScript and displays the alert pop-up.
+
+Screenshot:
+
+![CSP Bypass High](screenshots/csp-bypass-high.png)
+![CSP Bypass High](screenshots/csp-bypass-high1.png)
+
+Explanation (Why it Worked):
+
+At High security level, DVWA attempts to enforce stricter CSP rules. However, the application still allows dynamic callback functions. By intercepting the request and modifying the callback parameter, attackers can inject arbitrary JavaScript and bypass the CSP protection.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | CSP allows external script sources |
+| Medium | Successful | Nonce value reused and predictable |
+| High | Successful | Callback parameter injection |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Security Misconfiguration (OWASP Top 10 A05:2021)
