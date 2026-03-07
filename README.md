@@ -181,3 +181,120 @@ These protections prevent automated password guessing attacks.
 
 Category:  
 Broken Authentication (OWASP A2)
+
+## Command Injection
+
+Description:
+Command Injection occurs when an application passes unsanitized user input to the operating system shell. An attacker can inject additional commands to execute arbitrary system operations on the server. This vulnerability is commonly found in poorly validated system utilities such as ping or network tools.
+
+---
+
+### Security Level: Low
+
+Payload Used:
+
+```
+127.0.0.1; ls
+```
+
+Other payloads:
+
+```
+127.0.0.1 && ls
+127.0.0.1 | ls
+127.0.0.1; whoami
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → Command Injection**.
+2. Set DVWA Security Level to **Low**.
+3. Enter the payload in the **IP address field**.
+4. Click **Submit**.
+
+Result:
+
+The application executed both the **ping command** and the injected command. The server returned the directory listing or system information.
+
+Screenshot:
+
+![Command Injection Low](screenshots/command-injection-low.png)
+
+Explanation (Why it Worked):
+
+At Low security level, DVWA directly inserts the user input into a system command:
+
+```
+ping -c 4 <user_input>
+```
+
+Since no input validation is applied, command separators like `;` allow attackers to execute additional commands.
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+```
+127.0.0.1 && ls
+```
+
+or
+
+```
+127.0.0.1 | ls
+```
+
+Result:
+
+Some command separators may still work, allowing partial command execution.
+
+Screenshot:
+
+![Command Injection Medium](screenshots/command-injection-medium.png)
+
+Explanation (Why It Is Harder):
+
+Medium security introduces basic input filtering to block dangerous characters like `;`. However, other operators such as `&&` or `|` may still bypass the filter.
+
+---
+
+### Security Level: High
+
+Payload Used:
+
+```
+127.0.0.1; ls
+```
+
+Result:
+
+The attack fails and only the ping command executes.
+
+Screenshot:
+
+![Command Injection High](screenshots/command-injection-high.png)
+
+Explanation (Why It Failed):
+
+High security performs strict input validation and sanitization, removing dangerous command separators and preventing arbitrary command execution.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | No input validation |
+| Medium | Partially successful | Basic filtering |
+| High | Failed | Strong input sanitization |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Injection (OWASP A03)
+
