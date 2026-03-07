@@ -134,8 +134,8 @@ Explanation (Why It Is Harder):
 
 Medium security introduces basic protections such as:
 
-- additional request validation
-- session token checking
+- request validation
+- delay between login attempts
 
 This slows down automated brute force attempts but does not fully prevent them.
 
