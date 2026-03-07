@@ -170,6 +170,7 @@ Burp Suite successfully identified the correct password **password** even at Hig
 Screenshot:
 
 ![High Brute Force](screenshots/bruteforce-high.png)
+![High Brute Force](screenshots/bruteforce-high1.png)
 
 Explanation (Why it Worked):
 
