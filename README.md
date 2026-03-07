@@ -281,20 +281,36 @@ Medium security introduces basic input filtering to block dangerous characters l
 Payload Used:
 
 ```
-127.0.0.1; ls
+127.0.0.1%0a ls
 ```
+
+Other working payload examples:
+
+```
+127.0.0.1%0a whoami
+127.0.0.1%0a cat /etc/passwd
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → Command Injection**.
+2. Set DVWA Security Level to **High**.
+3. Enter the payload into the **IP address field**.
+4. Click **Submit**.
 
 Result:
 
-The attack fails and only the ping command executes.
+The injected command executed successfully and the server returned the output of the additional command.
 
 Screenshot:
 
 ![Command Injection High](screenshots/command-injection-high.png)
 
-Explanation (Why It Failed):
+Explanation (Why it Worked):
 
-High security performs strict input validation and sanitization, removing dangerous command separators and preventing arbitrary command execution.
+At High security level in DVWA, the application attempts to validate the input so that it resembles a valid IP address. However, the application does not properly sanitize newline characters.
+
+By using the encoded newline character `%0a`, the injected command is placed on a new line in the shell execution context. This bypasses the input validation and allows the attacker to execute additional system commands on the server.
 
 ---
 
@@ -304,7 +320,7 @@ High security performs strict input validation and sanitization, removing danger
 |----------------|---------------|-------|
 | Low | Successful | No input validation |
 | Medium | Successful | Basic filtering |
-| High | Failed | Strong input sanitization |
+| High | Successful | Newline injection bypassed input validation |
 
 ---
 
