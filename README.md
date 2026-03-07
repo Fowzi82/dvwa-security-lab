@@ -281,14 +281,7 @@ Medium security introduces basic input filtering to block dangerous characters l
 Payload Used:
 
 ```
-127.0.0.1%0a ls
-```
-
-Other working payload examples:
-
-```
-127.0.0.1%0a whoami
-127.0.0.1%0a cat /etc/passwd
+127.0.0.1 || ls
 ```
 
 Steps Performed:
@@ -308,9 +301,11 @@ Screenshot:
 
 Explanation (Why it Worked):
 
-At High security level in DVWA, the application attempts to validate the input so that it resembles a valid IP address. However, the application does not properly sanitize newline characters.
+At High security level in DVWA, the application attempts to validate the input so that it resembles a valid IP address before executing the system command.
 
-By using the encoded newline character `%0a`, the injected command is placed on a new line in the shell execution context. This bypasses the input validation and allows the attacker to execute additional system commands on the server.
+However, the filtering mechanism does not properly block certain shell operators such as `||`. In many Unix-like shells, the `||` operator allows the second command to execute if the first command fails.
+
+By providing the input `127.0.0.1 || ls`, the attacker injects an additional command into the shell execution. This allows the `ls` command to run on the server, revealing the directory contents and demonstrating successful command injection despite the input validation.
 
 ---
 
