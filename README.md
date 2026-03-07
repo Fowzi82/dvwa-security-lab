@@ -1837,10 +1837,8 @@ Submitting these values successfully completes the challenge.
 
 **Screenshot to attach:**
 
-```
 ![JavaScript Low Success](images/js_low_success.png)
 ![JavaScript Low Success](images/js_low_success.png1)
-```
 
 ---
 
@@ -1871,10 +1869,8 @@ After submitting these values, the application accepts the request and the chall
 
 **Screenshot to attach:**
 
-```
 ![JavaScript Medium Success](images/js_medium_success.png)
 ![JavaScript Medium Success](images/js_medium_success1.png)
-```
 
 ---
 
@@ -1932,10 +1928,8 @@ Submitting this token completes the challenge successfully.
 
 **Screenshot to attach:**
 
-```
 ![JavaScript High Success](images/js_high_success.png)
 ![JavaScript High Success](images/js_high_success1.png)
-```
 
 ---
 
