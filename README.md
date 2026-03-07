@@ -42,9 +42,20 @@ Verification:
 docker ps
 ```
 
+Result:
+The DVWA container is running successfully.
+
+Screenshot:
+
+![Docker PS Output](screenshots/docker-ps.png)
+
 DVWA was accessible at:
 
 http://localhost:8080
+
+Screenshot:
+
+![DVWA Homepage](screenshots/dvwa-homepage.png)
 
 ---
 
