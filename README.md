@@ -1045,6 +1045,7 @@ Result:
 Screenshot:
 
 ![SQL Injection Blind Low](screenshots/sql-injection-blind-low.png)
+![SQL Injection Blind Low](screenshots/sql-injection-blind-low1.png)
 
 Explanation (Why it Worked):
 
