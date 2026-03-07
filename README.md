@@ -1049,7 +1049,7 @@ Screenshot:
 
 Explanation (Why it Worked):
 
-At Low security level, DVWA directly inserts the input into the SQL query without validation. By injecting boolean conditions, attackers can determine whether a condition evaluates to true or false based on the application's response. This allows attackers to extract database information character-by-character. :contentReference[oaicite:2]{index=2}
+At Low security level, DVWA directly inserts the input into the SQL query without validation. By injecting boolean conditions, attackers can determine whether a condition evaluates to true or false based on the application's response. This allows attackers to extract database information character-by-character.
 
 Example extraction payload:
 
@@ -1104,7 +1104,7 @@ Screenshot:
 
 Explanation (Why it Worked):
 
-At Medium security level, the input comes from a dropdown menu, which restricts manual input. However, by intercepting the request with **Burp Suite**, attackers can modify the parameter directly and inject SQL queries. Using ASCII comparisons allows attackers to determine the exact characters in the password one by one. :contentReference[oaicite:3]{index=3}
+At Medium security level, the input comes from a dropdown menu, which restricts manual input. However, by intercepting the request with **Burp Suite**, attackers can modify the parameter directly and inject SQL queries. Using ASCII comparisons allows attackers to determine the exact characters in the password one by one. 
 
 ---
 
@@ -1135,7 +1135,7 @@ Screenshot:
 
 Explanation (Why it Worked):
 
-At High security level, DVWA adds `LIMIT 1` to the query and modifies the interface so the request is triggered through a link popup. However, the backend query is still vulnerable to SQL injection. Attackers can still use boolean conditions with `SUBSTRING()` to extract sensitive data from the database character-by-character. :contentReference[oaicite:4]{index=4}
+At High security level, DVWA adds `LIMIT 1` to the query and modifies the interface so the request is triggered through a link popup. However, the backend query is still vulnerable to SQL injection. Attackers can still use boolean conditions with `SUBSTRING()` to extract sensitive data from the database character-by-character. 
 
 ---
 
@@ -1833,7 +1833,7 @@ So the correct request values become:
 token=38581812b435834ebf84ebcc2c6424d6&phrase=success
 ```
 
-Submitting these values successfully completes the challenge. :contentReference[oaicite:0]{index=0}
+Submitting these values successfully completes the challenge.
 
 **Screenshot to attach:**
 
@@ -1867,7 +1867,7 @@ So the request becomes:
 token=XXsseccusXX&phrase=success
 ```
 
-After submitting these values, the application accepts the request and the challenge is solved. :contentReference[oaicite:1]{index=1}
+After submitting these values, the application accepts the request and the challenge is solved.
 
 **Screenshot to attach:**
 
@@ -1928,7 +1928,7 @@ Final request:
 token=ec7ef8687050b6fe803867ea696734c67b541dfafb286a0b1239f42ac5b0aa84&phrase=success
 ```
 
-Submitting this token completes the challenge successfully. :contentReference[oaicite:2]{index=2}
+Submitting this token completes the challenge successfully.
 
 **Screenshot to attach:**
 
@@ -1949,4 +1949,4 @@ Since JavaScript runs in the user's browser, an attacker can:
 - Reverse engineer the token generation
 - Manually craft valid requests
 
-Proper security should always be implemented on the **server side**, not only in client-side JavaScript. :contentReference[oaicite:3]{index=3}
+Proper security should always be implemented on the **server side**, not only in client-side JavaScript.
