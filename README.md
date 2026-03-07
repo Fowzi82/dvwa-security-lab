@@ -172,7 +172,7 @@ These protections prevent automated password guessing attacks.
 | Security Level | Attack Success | Reason |
 |----------------|---------------|-------|
 | Low | Successful | No protection |
-| Medium | Partially successful | Basic validation |
+| Medium | Successful | Basic validation |
 | High | Failed | Strong protection mechanisms |
 
 ---
@@ -287,7 +287,7 @@ High security performs strict input validation and sanitization, removing danger
 | Security Level | Attack Success | Reason |
 |----------------|---------------|-------|
 | Low | Successful | No input validation |
-| Medium | Partially successful | Basic filtering |
+| Medium | Successful | Basic filtering |
 | High | Failed | Strong input sanitization |
 
 ---
