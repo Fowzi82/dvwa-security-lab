@@ -706,3 +706,151 @@ This allows the PHP code to be uploaded and executed on the server despite the h
 Category:
 
 Security Misconfiguration (OWASP Top 10 A05:2021)
+
+## Insecure CAPTCHA
+
+Description:
+
+An Insecure CAPTCHA vulnerability occurs when a CAPTCHA mechanism meant to prevent automated actions can be bypassed due to improper server-side validation. Attackers may manipulate requests or parameters to bypass CAPTCHA verification entirely.
+
+---
+
+### Security Level: Low
+
+Payload Used:
+
+```
+step=2&password_new=test123&password_conf=test123&Change=Change
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → Insecure CAPTCHA**.
+2. Set DVWA Security Level to **Low**.
+3. Enter a new password and confirmation password.
+4. Intercept the request using **Burp Suite**.
+5. Remove the CAPTCHA validation parameter and directly submit the password change request.
+
+Result:
+
+The password was successfully changed without solving the CAPTCHA.
+
+Screenshot:
+
+![Insecure CAPTCHA Low](screenshots/insecure-captcha-low.png)
+![Insecure CAPTCHA Low](screenshots/insecure-captcha-low1.png)
+
+Explanation (Why it Worked):
+
+At Low security level, DVWA does not properly validate the CAPTCHA on the server side. The application only relies on client-side validation, allowing attackers to bypass the CAPTCHA by directly modifying the request.
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+```
+step=2&password_new=test123&password_conf=test123&passed_captcha=true&Change=Change
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → Insecure CAPTCHA**.
+2. Set DVWA Security Level to **Medium**.
+3. Intercept the password change request using **Burp Suite**.
+4. Modify the parameter `passed_captcha` to `true`.
+5. Forward the modified request.
+
+Result:
+
+The application accepted the request and the password was changed without correctly solving the CAPTCHA.
+
+Screenshot:
+
+![Insecure CAPTCHA Medium](screenshots/insecure-captcha-medium.png)
+![Insecure CAPTCHA Medium](screenshots/insecure-captcha-medium1.png)
+
+Explanation (Why it Worked):
+
+At Medium security level, DVWA uses a parameter (`passed_captcha`) to track whether the CAPTCHA was solved. However, this parameter is controlled by the client and not securely validated on the server, allowing attackers to manually set it to `true`.
+
+---
+
+### Security Level: High
+
+Payload Used:
+
+```
+step=2&password_new=test123&password_conf=test123&g-recaptcha-response=hidd3n_valu3&Change=Change
+```
+
+Modified Header:
+
+```
+User-Agent: reCAPTCHA
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → Insecure CAPTCHA**.
+2. Set DVWA Security Level to **High**.
+3. Intercept the password change request using **Burp Suite**.
+4. Modify the request parameters by adding:
+
+```
+g-recaptcha-response=hidd3n_valu3
+```
+
+5. Modify the HTTP header:
+
+```
+User-Agent: reCAPTCHA
+```
+
+6. Forward the modified request to the server.
+
+Result:
+
+The password was successfully changed without solving the CAPTCHA challenge.
+
+Screenshot:
+
+![Insecure CAPTCHA High](screenshots/insecure-captcha-high.png)
+![Insecure CAPTCHA High](screenshots/insecure-captcha-high1.png)
+
+Explanation (Why it Worked):
+
+At High security level, DVWA attempts to verify CAPTCHA responses using the `g-recaptcha-response` parameter. However, the application does not properly validate the CAPTCHA response with the verification service.
+
+By manually setting:
+
+```
+g-recaptcha-response=hidd3n_valu3
+```
+
+and modifying the request header to:
+
+```
+User-Agent: reCAPTCHA
+```
+
+the attacker tricks the application into assuming that the CAPTCHA verification was completed successfully, allowing the protected action to proceed.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | No server-side CAPTCHA validation |
+| Medium | Successful | Client-controlled CAPTCHA parameter |
+| High | Successful | Request flow manipulation |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Identification and Authentication Failures (OWASP Top 10 A07:2021)
