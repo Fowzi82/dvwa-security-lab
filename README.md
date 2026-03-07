@@ -124,7 +124,7 @@ Same password list as above.
 
 Result:
 
-Attack partially works but requires handling session tokens.
+The attack still works but is slower because the application introduces a delay between login attempts.
 
 Screenshot:
 
@@ -187,8 +187,8 @@ Each login attempt requires a valid `user_token` parameter. However, by intercep
 | Security Level | Attack Success | Reason |
 |----------------|---------------|-------|
 | Low | Successful | No protection |
-| Medium | Successful | Basic validation |
-| High | Failed | Strong protection mechanisms |
+| Medium | Successful | Basic validation and delay |
+| High | Successful | CSRF token bypassed using Burp Suite |
 
 ---
 
