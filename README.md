@@ -21,6 +21,10 @@ docker --version
 Result:
 Docker installed successfully.
 
+Screenshot:
+
+![Docker Version](screenshots/docker-version.png)
+
 ---
 
 ## DVWA Deployment
