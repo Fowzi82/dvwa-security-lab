@@ -1386,3 +1386,114 @@ At High security level, DVWA attempts to restrict modifications to the `default`
 Category:
 
 Injection (OWASP Top 10 A03:2021)
+
+## Cross-Site Scripting (Reflected)
+
+Description:
+
+Reflected Cross-Site Scripting (Reflected XSS) occurs when a web application immediately returns user-supplied input in the HTTP response without properly validating or sanitizing it. Attackers can craft malicious input containing JavaScript code that executes in the victim's browser.
+
+---
+
+### Security Level: Low
+
+Payload Used:
+
+```
+<script>alert('Reflected XSS')</script>
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → XSS (Reflected)**.
+2. Set DVWA Security Level to **Low**.
+3. Enter the payload above into the input field.
+4. Click **Submit**.
+
+Result:
+
+A JavaScript alert box appears in the browser confirming successful script execution.
+
+Screenshot:
+
+![Reflected XSS Low](screenshots/xss-reflected-low.png)
+
+Explanation (Why it Worked):
+
+At Low security level, DVWA does not sanitize user input before reflecting it back into the webpage. Because the input is directly embedded into the HTML response, the injected JavaScript executes immediately.
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+```
+<sCrIpT>alert('Reflected XSS')</sCrIpT>
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → XSS (Reflected)**.
+2. Set DVWA Security Level to **Medium**.
+3. Enter the payload above in the input field.
+4. Click **Submit**.
+
+Result:
+
+The alert box appears, indicating that the injected JavaScript executed successfully.
+
+Screenshot:
+
+![Reflected XSS Medium](screenshots/xss-reflected-medium.png)
+
+Explanation (Why it Worked):
+
+At Medium security level, DVWA attempts to block `<script>` tags using a blacklist filter. However, the filter is **case-sensitive**, meaning that mixed-case versions like `<sCrIpT>` bypass the filter and allow the script to execute.
+
+---
+
+### Security Level: High
+
+Payload Used:
+
+```
+<img src=x onerror=alert(1)>
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → XSS (Reflected)**.
+2. Set DVWA Security Level to **High**.
+3. Enter the payload above into the input field.
+4. Click **Submit**.
+
+Result:
+
+The browser triggers the `onerror` event of the injected image element and displays a JavaScript alert.
+
+Screenshot:
+
+![Reflected XSS High](screenshots/xss-reflected-high.png)
+
+Explanation (Why it Worked):
+
+At High security level, DVWA blocks variations of the `<script>` tag using stronger filtering. However, the application still allows other HTML elements. By injecting an `<img>` element with an `onerror` event handler, attackers can execute JavaScript without using the blocked `<script>` tag.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | No input sanitization |
+| Medium | Successful | Case-sensitive script filter |
+| High | Successful | Event handler injection |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Injection (OWASP Top 10 A03:2021)
