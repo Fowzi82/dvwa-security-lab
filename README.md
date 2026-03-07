@@ -353,6 +353,8 @@ The attack becomes harder because the application checks the HTTP referrer heade
 Screenshot:
 
 ![CSRF Medium](screenshots/csrf-medium.png)
+![CSRF Medium](screenshots/csrf-medium1.png)
+![CSRF Medium](screenshots/csrf-medium2.png)
 
 Explanation (Why It Is Harder):
 
