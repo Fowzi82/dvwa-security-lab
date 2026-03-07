@@ -298,3 +298,5 @@ Category:
 
 Injection (OWASP A03)
 
+### More PHP Payloads:
+https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/#python
