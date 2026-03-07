@@ -145,25 +145,40 @@ This slows down automated brute force attempts but does not fully prevent them.
 
 Payload Used:
 
-Same payload list.
+Password wordlist:
+
+123456
+admin
+letmein
+karachi123
+password
+
+Steps Performed:
+
+1. Open **Burp Suite** and enable Proxy Intercept.
+2. Submit a login request in DVWA to capture the request.
+3. Send the request to **Burp Intruder**.
+4. Identify the **password parameter** as the payload position.
+5. Extract the **user_token value** from the request.
+6. Configure Intruder to update the CSRF token dynamically for each request.
+7. Launch the brute force attack using the password wordlist.
 
 Result:
 
-Attack fails.
+Burp Suite successfully identified the correct password **password** even at High security level.
 
 Screenshot:
 
 ![High Brute Force](screenshots/bruteforce-high.png)
 
-Explanation (Why It Failed):
+Explanation (Why it Worked):
 
-High security implements stronger protections such as:
+At High security level, DVWA introduces additional protections including:
 
-- anti-CSRF tokens
+- CSRF tokens
 - request validation
-- possible CAPTCHA mechanisms
 
-These protections prevent automated password guessing attacks.
+Each login attempt requires a valid `user_token` parameter. However, by intercepting the request using Burp Suite and dynamically updating the CSRF token during the attack, the protection can be bypassed. This allows automated brute force attempts to continue until the correct password is discovered.
 
 ---
 
