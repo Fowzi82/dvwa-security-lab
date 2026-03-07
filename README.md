@@ -854,3 +854,141 @@ the attacker tricks the application into assuming that the CAPTCHA verification 
 Category:
 
 Identification and Authentication Failures (OWASP Top 10 A07:2021)
+
+## SQL Injection
+
+Description:
+
+SQL Injection is a vulnerability that occurs when user input is not properly sanitized before being used in SQL queries. Attackers can manipulate input fields to execute unintended SQL commands, allowing them to access sensitive information from the database.
+
+---
+
+### Security Level: Low
+
+Payload Used:
+
+```
+' UNION SELECT user, password FROM users#
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → SQL Injection**.
+2. Set DVWA Security Level to **Low**.
+3. Enter the following payload in the **User ID** field:
+
+```
+' UNION SELECT user, password FROM users#
+```
+
+4. Click **Submit**.
+
+Result:
+
+The application displayed usernames and password hashes from the `users` table.
+
+Screenshot:
+
+![SQL Injection Low](screenshots/sql-injection-low.png)
+
+Explanation (Why it Worked):
+
+At Low security level, DVWA directly inserts user input into the SQL query without validation or filtering. The payload uses a **UNION SELECT** statement to retrieve data from another table in the database.
+
+Example injected query:
+
+```
+SELECT first_name, last_name FROM users WHERE user_id = ''
+UNION SELECT user, password FROM users;
+```
+
+---
+
+### Security Level: Medium
+
+Payload Used:
+
+```
+1 UNION SELECT user, password FROM users#
+```
+
+Attack Method:
+
+Request modified using **Burp Suite**.
+
+Steps Performed:
+
+1. Navigate to **DVWA → SQL Injection**.
+2. Set DVWA Security Level to **Medium**.
+3. Intercept the request using **Burp Suite**.
+4. Modify the `id` parameter in the request to:
+
+```
+1 UNION SELECT user, password FROM users#
+```
+
+5. Forward the modified request.
+
+Result:
+
+The application returned usernames and password hashes from the database.
+
+Screenshot:
+
+![SQL Injection Medium](screenshots/sql-injection-medium.png)
+
+Explanation (Why it Worked):
+
+At Medium security level, DVWA applies basic filtering to user inputs in the web interface. However, by intercepting the request using Burp Suite and modifying the parameter directly, the attacker can bypass these restrictions and inject a **UNION SELECT** query to extract sensitive data.
+
+---
+
+### Security Level: High
+
+Payload Used:
+
+```
+' UNION SELECT user, password FROM users#
+```
+
+Steps Performed:
+
+1. Navigate to **DVWA → SQL Injection**.
+2. Set DVWA Security Level to **High**.
+3. Enter the following payload in the **User ID** field:
+
+```
+' UNION SELECT user, password FROM users#
+```
+
+4. Submit the request.
+
+Result:
+
+The application displayed usernames and password hashes from the database.
+
+Screenshot:
+
+![SQL Injection High](screenshots/sql-injection-high.png)
+
+Explanation (Why it Worked):
+
+At High security level, DVWA attempts to add stronger validation and restrict injection attempts. However, the application still fails to properly sanitize user input before executing SQL queries. The attacker can still perform **UNION-based SQL injection** to retrieve sensitive information from the database.
+
+---
+
+### Security Comparison
+
+| Security Level | Attack Success | Reason |
+|----------------|---------------|-------|
+| Low | Successful | No input sanitization |
+| Medium | Successful | Request manipulation using Burp Suite |
+| High | Successful | Improper SQL query handling |
+
+---
+
+### OWASP Top 10 Mapping
+
+Category:
+
+Injection (OWASP Top 10 A03:2021)
