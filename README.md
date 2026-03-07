@@ -375,6 +375,7 @@ The attack fails because the request requires a valid CSRF token.
 Screenshot:
 
 ![CSRF High](screenshots/csrf-high.png)
+![CSRF High](screenshots/csrf-high1.png)
 
 Explanation (Why It Failed):
 
