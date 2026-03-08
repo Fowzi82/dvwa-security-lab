@@ -8,6 +8,15 @@
 
 ---
 
+# Table of Contents
+- Environment Setup
+- Vulnerability Testing
+- Docker Inspection
+- Security Analysis
+- Bonus Task
+
+---
+
 # Environment Setup
 
 ## Docker Installation
@@ -1957,7 +1966,7 @@ Screenshot:
 
 - **Application files location:** `/var/www/html`  
 - **Backend technology:** LAMP stack (Linux, Apache, MySQL, PHP)  
-- **Docker isolation:** Each container has its own filesystem, processes, and network, keeping DVWA separated from the host system.
+- **Docker isolation:** Docker containers run using Linux namespaces and cgroups, which isolate processes, networking, and filesystem resources from the host system.
   
 ## Security Analysis Questions
 
@@ -2109,7 +2118,7 @@ sudo systemctl reload nginx
 - Open your browser and navigate to:
   
 ```
-http://localhost/login.php
+https://localhost/login.php
 ```
 
 - You may see a self-signed certificate warning. This is normal for testing purposes.
