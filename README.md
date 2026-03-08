@@ -2096,3 +2096,110 @@ SELECT * FROM users WHERE user='$username' AND password='$password';
 | XSS (Stored) | A05:2025 - Injection |
 | CSP Bypass | A02:2025 - Security Misconfiguration / A05:2025 - Injection |
 | JavaScript Execution | A05:2025 - Injection |
+
+# Bonus Task: Deploy DVWA behind Nginx with HTTPS
+
+## Step 1: Open the Nginx default site configuration
+
+Open the default Nginx site configuration file in `nano`:
+
+```
+sudo nano /etc/nginx/sites-available/default
+```
+
+- This file controls how Nginx serves websites on your server.
+- Screenshot:
+
+![Open default site config](screenshots/bonus-nginx-default-open.png)
+
+---
+
+## Step 2: Add HTTPS server block
+
+Scroll to the bottom of the file and add the following server block:
+
+```
+server {
+   listen 443 ssl;
+   server_name localhost;
+   ssl_certificate /etc/nginx/ssl/dvwa.crt;
+   ssl_certificate_key /etc/nginx/ssl/dvwa.key;
+
+   root /var/www/html;
+   index index.php index.html index.htm;
+   
+   location / {
+       try_files $uri $uri/ =404;
+   }
+
+location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+   }
+}
+```
+
+- This enables HTTPS (port 443) and tells Nginx to use the self-signed certificate.
+- Screenshot:
+
+![HTTPS server block added](screenshots/bonus-nginx-https-block.png)
+
+---
+
+## Step 3: Test Nginx configuration
+
+Check if the Nginx configuration is valid:
+
+```
+sudo nginx -t
+```
+
+- If successful, you will see:
+
+```
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+- Screenshot:
+
+![Nginx config test](screenshots/bonus-nginx-test.png)
+
+---
+
+## Step 4: Reload Nginx
+
+Apply the changes without stopping the server:
+
+```
+sudo systemctl reload nginx
+```
+
+- Screenshot:
+
+![Reload Nginx](screenshots/bonus-nginx-reload.png)
+
+---
+
+## Step 5: Verify HTTPS in Browser
+
+- Open your browser and navigate to:
+  
+```
+http://localhost/login.php
+```
+
+- You may see a self-signed certificate warning. This is normal for testing purposes.
+- DVWA should now be accessible over HTTPS.
+- Screenshot:
+
+![DVWA HTTPS](screenshots/bonus-dvwa-https.png)
+
+---
+
+### Explanation
+
+- Using Nginx as a reverse proxy allows you to serve DVWA over HTTPS.
+- A self-signed certificate encrypts the traffic between the browser and server.
+- HTTPS protects against man-in-the-middle attacks when testing locally.
+- DVWA files are still served from `/var/www/html`.
