@@ -2034,8 +2034,6 @@ SELECT * FROM users WHERE user='$username' AND password='$password';
 In this bonus task, DVWA was deployed behind an Nginx reverse proxy using Docker containers.  
 A self-signed SSL certificate was generated to enable HTTPS communication between the browser and the server.
 
-This setup simulates a real-world deployment where a reverse proxy sits in front of an application server to manage incoming traffic and enforce secure communication.
-
 ---
 
 ## Architecture
@@ -2045,8 +2043,6 @@ Browser → HTTPS → Nginx Reverse Proxy → DVWA Docker Container
 - The browser communicates securely with Nginx using HTTPS.
 - Nginx acts as a reverse proxy and forwards requests to the DVWA container.
 - The DVWA container processes the request and sends the response back through Nginx.
-
-This architecture is commonly used in production environments to add security layers and traffic management.
 
 ---
 
@@ -2059,8 +2055,6 @@ Command executed:
 ```bash
 docker compose up -d
 ```
-
-This command pulls the required images and launches both containers in the background.
 
 ### Screenshot: Docker Compose Running
 
@@ -2075,8 +2069,6 @@ To confirm that the containers started successfully, the following command was e
 ```bash
 docker ps
 ```
-
-This command lists all active Docker containers.  
 The output shows both the DVWA container and the Nginx reverse proxy container running.
 
 ### Screenshot: Running Containers
@@ -2131,13 +2123,11 @@ Using HTTPS protects web applications from:
 - Credential interception
 - Data tampering during transmission
 
-By placing Nginx as a reverse proxy with HTTPS enabled, the communication between the client and server becomes encrypted, significantly improving the security of the application deployment.
+By placing Nginx as a reverse proxy with HTTPS enabled, the communication between the client and server becomes encrypted.
 
 ---
 
 ## Conclusion
 
 The DVWA application was successfully deployed behind an Nginx reverse proxy using Docker containers.  
-A self-signed SSL certificate enabled HTTPS communication, demonstrating the difference between secure and insecure web traffic.
-
-This setup reflects a common real-world deployment pattern where reverse proxies and HTTPS are used to improve the security of web applications.
+A self-signed SSL certificate enabled HTTPS communication.
