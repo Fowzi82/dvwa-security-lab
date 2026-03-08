@@ -1985,7 +1985,7 @@ SELECT * FROM users WHERE user='$username' AND password='$password';
 ---
 
 ### 2. What control prevents SQL Injection at High security?
-- High security uses input validation and parameterized queries.
+- High security attempts stronger input validation and escaping. However the query is still dynamically constructed, which leaves it vulnerable.
 - User input is sanitized to remove special characters such as `'`, `--`, `;`.
 - Prepared statements ensure input is treated as data, not code.
 - SQL Injection attacks fail because user input cannot alter the SQL logic.
