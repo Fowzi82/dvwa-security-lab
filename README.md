@@ -2082,6 +2082,7 @@ The output shows both the DVWA container and the Nginx reverse proxy container r
 ### Screenshot: Running Containers
 
 ![Running Docker Containers](screenshots/bonus-dvwa-2.png)
+![Running Docker Containers](screenshots/bonus-dvwa-4.png)
 
 ---
 
