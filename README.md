@@ -2029,109 +2029,114 @@ SELECT * FROM users WHERE user='$username' AND password='$password';
 | CSP Bypass | A02:2025 - Security Misconfiguration / A05:2025 - Injection |
 | JavaScript Execution | A05:2025 - Injection |
 
-# Bonus Task: Deploy DVWA behind Nginx with HTTPS
+## Bonus Task: Deploy DVWA Behind Nginx Reverse Proxy with HTTPS
 
-## Step 1: Open the Nginx default site configuration
+In this bonus task, DVWA was deployed behind an Nginx reverse proxy using Docker containers.  
+A self-signed SSL certificate was generated to enable HTTPS communication between the browser and the server.
 
-Open the default Nginx site configuration file in `nano`:
-
-```
-sudo nano /etc/nginx/sites-available/default
-```
-
-- This file controls how Nginx serves websites on your server.
-- Screenshot:
-
-![Open default site config](screenshots/bonus-nginx-default-open.png)
+This setup simulates a real-world deployment where a reverse proxy sits in front of an application server to manage incoming traffic and enforce secure communication.
 
 ---
 
-## Step 2: Add HTTPS server block
+## Architecture
 
-Scroll to the bottom of the file and add the following server block:
+Browser → HTTPS → Nginx Reverse Proxy → DVWA Docker Container
 
-```
-server {
-   listen 443 ssl;
-   server_name localhost;
-   ssl_certificate /etc/nginx/ssl/dvwa.crt;
-   ssl_certificate_key /etc/nginx/ssl/dvwa.key;
+- The browser communicates securely with Nginx using HTTPS.
+- Nginx acts as a reverse proxy and forwards requests to the DVWA container.
+- The DVWA container processes the request and sends the response back through Nginx.
 
-   root /var/www/html;
-   index index.php index.html index.htm;
-   
-   location / {
-       try_files $uri $uri/ =404;
-   }
-
-location ~ \.php$ {
-    include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-   }
-}
-```
-
-- This enables HTTPS (port 443) and tells Nginx to use the self-signed certificate.
-- Screenshot:
-
-![HTTPS server block added](screenshots/bonus-nginx-https-block.png)
+This architecture is commonly used in production environments to add security layers and traffic management.
 
 ---
 
-## Step 3: Test Nginx configuration
+## Step 1: Start the Containers
 
-Check if the Nginx configuration is valid:
+The DVWA and Nginx containers were started using Docker Compose.
 
-```
-sudo nginx -t
-```
+Command executed:
 
-- If successful, you will see:
-
-```
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
+```bash
+docker compose up -d
 ```
 
-- Screenshot:
+This command pulls the required images and launches both containers in the background.
 
-![Nginx config test](screenshots/bonus-nginx-test.png)
+### Screenshot: Docker Compose Running
+
+![Docker Compose Running](screenshots/bonus-dvwa-1.png)
 
 ---
 
-## Step 4: Reload Nginx
+## Step 2: Verify Running Containers
 
-Apply the changes without stopping the server:
+To confirm that the containers started successfully, the following command was executed:
 
+```bash
+docker ps
 ```
-sudo systemctl reload nginx
-```
 
-- Screenshot:
+This command lists all active Docker containers.  
+The output shows both the DVWA container and the Nginx reverse proxy container running.
 
-![Reload Nginx](screenshots/bonus-nginx-reload.png)
+### Screenshot: Running Containers
+
+![Running Docker Containers](screenshots/bonus-dvwa-2.png)
 
 ---
 
-## Step 5: Verify HTTPS in Browser
+## Step 3: Access DVWA Over HTTPS
 
-- Open your browser and navigate to:
-  
+The DVWA application was accessed using HTTPS through the Nginx reverse proxy.
+
+URL used:
+
 ```
-https://localhost/login.php
+https://localhost:8443
 ```
 
-- You may see a self-signed certificate warning. This is normal for testing purposes.
-- DVWA should now be accessible over HTTPS.
-- Screenshot:
+Since a self-signed certificate was used, the browser displayed a security warning.  
+This warning was expected and was manually accepted for testing purposes.
 
-![DVWA HTTPS](screenshots/bonus-dvwa-https.png)
+After proceeding past the warning, the DVWA application loaded successfully through the secure HTTPS connection.
+
+### Screenshot: DVWA Accessed via HTTPS
+
+![DVWA HTTPS Access](screenshots/bonus-dvwa-3.png)
 
 ---
 
-### Explanation
+## HTTP vs HTTPS Traffic Analysis
 
-- Using Nginx as a reverse proxy allows you to serve DVWA over HTTPS.
-- A self-signed certificate encrypts the traffic between the browser and server.
-- HTTPS protects against man-in-the-middle attacks when testing locally.
-- DVWA files are still served from `/var/www/html`.
+### HTTP
+
+- Communication occurs in plaintext.
+- Sensitive information such as usernames, passwords, and form data can be intercepted by attackers.
+- Tools such as packet sniffers can easily read transmitted data.
+
+### HTTPS
+
+- Communication is encrypted using TLS (Transport Layer Security).
+- Data is protected during transmission.
+- Even if network traffic is intercepted, the contents remain encrypted and unreadable.
+
+---
+
+## Security Benefit of Using HTTPS
+
+Using HTTPS protects web applications from:
+
+- Man-in-the-middle attacks
+- Credential interception
+- Data tampering during transmission
+
+By placing Nginx as a reverse proxy with HTTPS enabled, the communication between the client and server becomes encrypted, significantly improving the security of the application deployment.
+
+---
+
+## Conclusion
+
+The DVWA application was successfully deployed behind an Nginx reverse proxy using Docker containers.  
+A self-signed SSL certificate enabled HTTPS communication, demonstrating the difference between secure and insecure web traffic.
+
+This setup reflects a common real-world deployment pattern where reverse proxies and HTTPS are used to improve the security of web applications.
