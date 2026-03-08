@@ -1944,3 +1944,103 @@ Since JavaScript runs in the user's browser, an attacker can:
 - Manually craft valid requests
 
 Proper security should always be implemented on the **server side**, not only in client-side JavaScript.
+
+## Docker Inspection Tasks
+
+### List Running Containers
+
+Command:
+
+```
+docker ps
+```
+
+Result:  
+The DVWA container is running successfully.
+
+Screenshot:
+
+![Docker PS Output](screenshots/docker-ps.png)
+
+---
+
+### Inspect DVWA Container
+
+Command:
+
+```
+docker inspect dvwa
+```
+
+Result:  
+Displays detailed configuration of the DVWA container, including network settings, mounted volumes, and environment variables.
+
+Screenshot:
+
+![Docker Inspect Output](screenshots/docker-inspect.png)
+
+---
+
+### View Container Logs
+
+Command:
+
+```
+docker logs dvwa
+```
+
+Result:  
+Shows startup logs of the DVWA container and web server messages.
+
+Screenshot:
+
+![Docker Logs Output](screenshots/docker-logs.png)
+
+---
+
+### Access Container Shell
+
+Command:
+
+```
+docker exec -it dvwa /bin/bash
+```
+
+Result:  
+Successfully accessed the DVWA container’s shell.
+
+Screenshot:
+
+![Docker Shell Access](screenshots/docker-shell.png)
+
+---
+
+### List Application Files Inside Container
+
+Command:
+
+```
+ls /var/www/html
+```
+
+Result:  
+Lists all DVWA application files and directories.
+
+Screenshot:
+
+![DVWA Application Files](screenshots/dvwa-files.png)
+
+---
+
+### Explanation
+
+- **Where Application Files Are Stored:**  
+  The DVWA application files are located in `/var/www/html` inside the container. This directory contains all PHP scripts, HTML pages, and configuration files that make the web application function. By inspecting this directory, we can verify the file structure and see exactly what the container serves to users.
+
+- **Backend Technology:**  
+  DVWA runs on a LAMP stack — Linux, Apache, MySQL, and PHP. Apache serves the web pages, PHP executes the application logic, and MySQL stores user credentials, vulnerability data, and other application information. Understanding the backend stack is crucial for identifying potential security weaknesses in the environment.
+
+- **Docker Isolation:**  
+  Docker isolates containers from the host operating system. Each container has its own filesystem, network interfaces, and process space. This ensures that running DVWA in Docker does not interfere with host services and limits the impact of exploits to the container environment. Isolation also allows us to safely perform vulnerability testing without affecting other applications on the machine.
+
+  
