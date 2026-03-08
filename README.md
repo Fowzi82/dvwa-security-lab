@@ -2035,12 +2035,12 @@ Screenshot:
 ### Explanation
 
 - **Where Application Files Are Stored:**  
-  The DVWA application files are located in `/var/www/html` inside the container. This directory contains all PHP scripts, HTML pages, and configuration files that make the web application function. By inspecting this directory, we can verify the file structure and see exactly what the container serves to users.
+  The DVWA application files are located in `/var/www/html` inside the container. This directory contains all PHP scripts, HTML pages, and configuration files that make the web application function.
 
 - **Backend Technology:**  
-  DVWA runs on a LAMP stack — Linux, Apache, MySQL, and PHP. Apache serves the web pages, PHP executes the application logic, and MySQL stores user credentials, vulnerability data, and other application information. Understanding the backend stack is crucial for identifying potential security weaknesses in the environment.
+  DVWA runs on a LAMP stack — Linux, Apache, MySQL, and PHP. Apache serves the web pages, PHP executes the application logic, and MySQL stores user credentials, vulnerability data, and other application information. 
 
 - **Docker Isolation:**  
-  Docker isolates containers from the host operating system. Each container has its own filesystem, network interfaces, and process space. This ensures that running DVWA in Docker does not interfere with host services and limits the impact of exploits to the container environment. Isolation also allows us to safely perform vulnerability testing without affecting other applications on the machine.
+  Docker isolates containers from the host operating system. Each container has its own filesystem, network interfaces, and process space. This ensures that running DVWA in Docker does not interfere with host services and limits the impact of exploits to the container environment.
 
   
