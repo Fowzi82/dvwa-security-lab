@@ -2036,3 +2036,63 @@ Screenshot:
 - **Backend technology:** LAMP stack (Linux, Apache, MySQL, PHP)  
 - **Docker isolation:** Each container has its own filesystem, processes, and network, keeping DVWA separated from the host system.
   
+## Security Analysis Questions
+
+### 1. Why does SQL Injection succeed at Low security?
+
+- DVWA at Low security does not sanitize or validate user input in SQL queries.
+- User input is directly inserted into SQL statements.
+- Example:
+```
+SELECT * FROM users WHERE user='$username' AND password='$password';
+```
+- Payloads like `' OR '1'='1` always evaluate to true.
+- No prepared statements or parameterized queries are used.
+- This allows attackers to bypass authentication and access sensitive data.
+
+---
+
+### 2. What control prevents SQL Injection at High security?
+- High security uses input validation and parameterized queries.
+- User input is sanitized to remove special characters such as `'`, `--`, `;`.
+- Prepared statements ensure input is treated as data, not code.
+- SQL Injection attacks fail because user input cannot alter the SQL logic.
+
+---
+
+### 3. Does HTTPS prevent these attacks? Why or why not?
+- HTTPS encrypts traffic between client and server.
+- It does not prevent application-layer vulnerabilities such as SQL Injection, XSS, or CSRF.
+- Malicious input is still processed unsafely by the server.
+- HTTPS secures communication but does not replace secure coding.
+
+---
+
+### 4. What risks exist if this application is deployed publicly?
+- Data exposure through SQL Injection or file inclusion.
+- Remote code execution via command injection.
+- Account compromise from brute force or weak authentication.
+- Malware upload through file upload vulnerabilities.
+- Content manipulation or cookie theft from XSS.
+- Regulatory and compliance risks if sensitive data is leaked.
+
+---
+
+### 5. Map each vulnerability to its OWASP Top 10 (2025) category
+
+| Vulnerability | OWASP Category (2025) |
+|---------------|----------------------|
+| Brute Force Authentication | A07:2025 - Authentication Failures |
+| Command Injection | A05:2025 - Injection |
+| CSRF | A01:2025 - Broken Access Control |
+| File Inclusion | A02:2025 - Security Misconfiguration / A05:2025 - Injection |
+| File Upload | A02:2025 - Security Misconfiguration |
+| Insecure CAPTCHA | A07:2025 - Authentication Failures |
+| SQL Injection | A05:2025 - Injection |
+| SQL Injection (Blind) | A05:2025 - Injection |
+| Weak Session IDs | A07:2025 - Authentication Failures |
+| XSS (DOM) | A05:2025 - Injection |
+| XSS (Reflected) | A05:2025 - Injection |
+| XSS (Stored) | A05:2025 - Injection |
+| CSP Bypass | A02:2025 - Security Misconfiguration / A05:2025 - Injection |
+| JavaScript Execution | A05:2025 - Injection |
