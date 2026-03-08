@@ -1985,10 +1985,10 @@ SELECT * FROM users WHERE user='$username' AND password='$password';
 ---
 
 ### 2. What control prevents SQL Injection at High security?
-- High security attempts stronger input validation and escaping. However the query is still dynamically constructed, which leaves it vulnerable.
-- User input is sanitized to remove special characters such as `'`, `--`, `;`.
-- Prepared statements ensure input is treated as data, not code.
-- SQL Injection attacks fail because user input cannot alter the SQL logic.
+- In theory, High security should use prepared statements (`mysqli_prepare()` + `bind_param()`) and strict type checking (`is_numeric()`) to treat user input as data only.
+- However, in this DVWA Docker image (and as demonstrated by the screenshots), the protection is incomplete for the SQL Injection module.
+- The query is still dynamically constructed in some code paths, allowing UNION-based extraction even at High level.
+- True prevention requires **parameterized queries** + input type enforcement on the backend.
 
 ---
 
