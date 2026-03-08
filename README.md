@@ -1943,8 +1943,6 @@ Since JavaScript runs in the user's browser, an attacker can:
 - Reverse engineer the token generation
 - Manually craft valid requests
 
-Proper security should always be implemented on the **server side**, not only in client-side JavaScript.
-
 ## Docker Inspection Tasks
 
 ### List Running Containers
