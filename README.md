@@ -1,5 +1,7 @@
 # DVWA Security Lab Report
 
+Fully completed DVWA security lab. All vulnerabilities solved across all difficulty levels, with detailed analysis and documentation.
+
 # Table of Contents
 - Environment Setup
 - Vulnerability Testing
